@@ -1,7 +1,7 @@
 model: 0 lr 0.1 optimizer sgd finalacc 83.46
 model: 0 lr 0.1 optimizer adam finalacc 87.97
 model: 0 lr 0.05 optimizer sgd finalacc 87.6
-model: 0 lr 0.05 optimizer adam finalacc 10.04
+model: 0 lr 0.05 optimizer adam finalacc 88.04
 model: 0 lr 0.02 optimizer sgd finalacc 89.56
 model: 0 lr 0.02 optimizer adam finalacc 89.42
 model: 0 lr 0.01 optimizer sgd finalacc 89.93
