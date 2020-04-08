@@ -21,6 +21,7 @@ parser.add_argument('-m', '--model', default=0, type=int)
 parser.add_argument('-o', '--optimizer', default='sgd', type=str)
 parser.add_argument('-e', '--epoch', default=50, type=int)
 parser.add_argument('-d', '--dir', default='./save', type=str)
+parser.add_argument('-g',"--gpu",default=0,type=str)
 parser.add_argument('--resume', '-r', action='store_true', help='resume from checkpoint')
 args = parser.parse_args()
 print(args)
@@ -31,6 +32,7 @@ EPOCH = args.epoch
 SAVE_DIR = args.dir
 if not os.path.exists(SAVE_DIR):
 	os.makedirs(SAVE_DIR)
+os.environ["CUDA_VISIBLE_DEVICES"]=args.gpu
 
 device = 'cuda' if torch.cuda.is_available() else 'cpu'
 best_acc = 0  # best test accuracy
