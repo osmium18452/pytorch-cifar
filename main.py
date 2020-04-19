@@ -5,6 +5,7 @@ import torch.optim as optim
 import torch.nn.functional as F
 import torch.backends.cudnn as cudnn
 import matplotlib.pyplot as plt
+import time
 
 import torchvision
 import torchvision.transforms as transforms
@@ -21,7 +22,7 @@ parser.add_argument('-m', '--model', default=0, type=int)
 parser.add_argument('-o', '--optimizer', default='sgd', type=str)
 parser.add_argument('-e', '--epoch', default=50, type=int)
 parser.add_argument('-d', '--dir', default='./save', type=str)
-parser.add_argument('-g',"--gpu",default=0,type=str)
+parser.add_argument('-g', "--gpu", default="0", type=str)
 parser.add_argument('--resume', '-r', action='store_true', help='resume from checkpoint')
 args = parser.parse_args()
 print(args)
@@ -32,7 +33,7 @@ EPOCH = args.epoch
 SAVE_DIR = args.dir
 if not os.path.exists(SAVE_DIR):
 	os.makedirs(SAVE_DIR)
-os.environ["CUDA_VISIBLE_DEVICES"]=args.gpu
+os.environ["CUDA_VISIBLE_DEVICES"] = args.gpu
 
 device = 'cuda' if torch.cuda.is_available() else 'cpu'
 best_acc = 0  # best test accuracy
@@ -175,6 +176,7 @@ trainAcc = []
 testAcc = []
 trainLoss = []
 testLoss = []
+start_time = time.time()
 for epoch in range(start_epoch, start_epoch + EPOCH):
 	ls, ac = train(epoch)
 	trainAcc.append(ac)
@@ -182,6 +184,10 @@ for epoch in range(start_epoch, start_epoch + EPOCH):
 	ls, ac = test(epoch)
 	testAcc.append(ac)
 	testLoss.append(ls)
+end_time = time.time()
+total_time = int(end_time - start_time)
+m, s = divmod(total_time, 60)
+h, m = divmod(m, 60)
 
 plt.figure()
 ax1 = plt.subplot()
@@ -205,4 +211,5 @@ plt.legend(handles=[l1, l2, l3, l4], loc="center right")
 sv = plt.gcf()
 sv.savefig(os.path.join(SAVE_DIR, "lossAndAcc" + str(args.lr) + OPTIMIZER + ".png"), format="png", dpi=300)
 with open(os.path.join(SAVE_DIR, "result.txt"), "a+") as f:
-	print("model:", MODEL, "lr", args.lr, "optimizer", OPTIMIZER, "finalacc", testAcc[-1], file=f)
+	print("model:", MODEL, "lr", args.lr, "optimizer", OPTIMIZER, "finalacc", testAcc[-1],
+	      "time %02d:%02d:%02d" % (h, m, s), file=f)
